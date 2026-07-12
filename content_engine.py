@@ -62,11 +62,32 @@ class ContentEngine:
         self.user_prenom = user_prenom
         self.user_role = user_role
         self.user_bio = user_bio
+        self.model_name = self._find_available_model()
+    
+    def _find_available_model(self):
+        """Trouve un modèle Gemini disponible"""
+        models_to_try = [
+            'gemini-2.0-flash',
+            'gemini-2.0-flash-lite',
+            'gemini-1.5-flash',
+            'gemini-1.5-flash-8b',
+            'gemini-1.5-pro',
+        ]
+        try:
+            available = [m.name for m in genai.list_models()]
+            for model in models_to_try:
+                full_name = f'models/{model}'
+                if full_name in available:
+                    return model
+            # Si aucun trouvé, retourner le premier de la liste
+            return models_to_try[0]
+        except:
+            return models_to_try[0]
     
     def research_trends(self):
         """Recherche les tendances actuelles sur le web"""
         try:
-            model = genai.GenerativeModel('gemini-1.5-flash')
+            model = genai.GenerativeModel(self.model_name)
             
             prompt = """Identifie 5 sujets tendance actuels pour créer du contenu 
             sur les réseaux sociaux en Afrique francophone autour de ces thématiques :
@@ -197,7 +218,7 @@ class ContentEngine:
         Si ce n'est pas pour TikTok, mets "script_video" à null."""
         
         # Appel à l'API Gemini
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel(self.model_name)
         full_prompt = self.SYSTEM_PROMPT + "\n\n" + user_prompt
         response = model.generate_content(full_prompt)
         
@@ -256,7 +277,7 @@ class ContentEngine:
             
             # Essayer de générer une image avec Gemini
             try:
-                # Méthode 1: Utiliser gemini-2.0-flash qui supporte la génération d'images
+                # Utiliser le modèle disponible
                 response = model.generate_content([image_prompt_enhanced])
                 # Si Gemini ne peut pas générer d'image directement, on utilise un fallback
             except:
