@@ -43,11 +43,42 @@ st.markdown(f"""
         font-weight: bold;
     }}
     .info-box {{
-        background: #f0f0f0;
+        background: #f5f5f5;
         padding: 15px;
         border-radius: 8px;
         border-left: 4px solid {VIOLET_ABD};
         margin: 10px 0;
+        color: #1a1a1a;
+    }}
+    /* Forcer le texte sombre sur les zones claires */
+    .stMarkdown, .stText, p, li, td, th {{
+        color: #1a1a1a !important;
+    }}
+    /* Sidebar en fond sombre avec texte clair */
+    .css-1d391kg, .css-1e5z2yo, section[data-testid="stSidebar"] {{
+        background-color: #1a1a1a;
+    }}
+    section[data-testid="stSidebar"] .stMarkdown, 
+    section[data-testid="stSidebar"] p,
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] .stText {{
+        color: #e0e0e0 !important;
+    }}
+    /* Tableaux lisibles */
+    .stTable td, .stTable th {{
+        color: #1a1a1a !important;
+    }}
+    /* Dataframe lisibles */
+    .stDataFrame {{
+        color: #1a1a1a;
+    }}
+    /* Zone principale fond clair */
+    .stApp {{
+        background-color: #ffffff;
+    }}
+    /* Text areas et inputs */
+    .stTextArea, .stTextInput {{
+        color: #1a1a1a;
     }}
 </style>
 """, unsafe_allow_html=True)
@@ -125,27 +156,31 @@ if config_tab == "1. Profil":
 
 # ── ÉTAPE 2 : CLÉS API ──
 elif config_tab == "2. Clés API":
-    st.sidebar.markdown("### 🔑 Clés API")
+    st.sidebar.markdown("### 🔑 Clé API Google Gemini (GRATUITE)")
     st.sidebar.markdown("""
     <div class="info-box">
-    <p><strong>OpenAI API Key</strong> (OBLIGATOIRE)</p>
-    <p>Obtenez votre clé sur <a href="https://platform.openai.com/api-keys">platform.openai.com</a></p>
-    <p>Coût estimé : ~10-20$/mois</p>
+    <p><strong>Google Gemini API Key</strong> (OBLIGATOIRE — 100% GRATUIT)</p>
+    <p>Obtenez votre clé gratuite sur <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a></p>
+    <p>1. Cliquez sur le lien ci-dessus</p>
+    <p>2. Connectez-vous avec votre compte Google</p>
+    <p>3. Cliquez sur "Create API Key"</p>
+    <p>4. Copiez la clé et collez-la ici</p>
+    <p>✅ Coût : <strong>0 FCFA — Gratuit</strong></p>
     </div>
     """, unsafe_allow_html=True)
     
-    openai_key = st.sidebar.text_input(
-        "OpenAI API Key", 
+    gemini_key = st.sidebar.text_input(
+        "Google Gemini API Key", 
         type="password",
-        placeholder="sk-..."
+        placeholder="AIza..."
     )
     
-    if st.sidebar.button("✅ Sauvegarder les clés"):
-        if openai_key:
-            st.session_state['openai_key'] = openai_key
-            st.sidebar.success("Clés sauvegardées ! Passez à l'étape 3.")
+    if st.sidebar.button("✅ Sauvegarder la clé"):
+        if gemini_key:
+            st.session_state['openai_key'] = gemini_key
+            st.sidebar.success("Clé sauvegardée ! Passez à l'étape 3.")
         else:
-            st.sidebar.error("La clé OpenAI est obligatoire.")
+            st.sidebar.error("La clé Google Gemini est obligatoire.")
 
 # ── ÉTAPE 3 : RÉSEAUX SOCIAUX ──
 elif config_tab == "3. Réseaux sociaux":
@@ -328,7 +363,7 @@ with tab2:
     
     if st.button("🚀 Générer le contenu", type="primary"):
         if 'openai_key' not in st.session_state:
-            st.error("Veuillez configurer votre clé OpenAI d'abord (Étape 2 dans la sidebar).")
+            st.error("Veuillez configurer votre clé Google Gemini d'abord (Étape 2 dans la sidebar).")
         else:
             with st.spinner("Génération du contenu en cours..."):
                 try:
